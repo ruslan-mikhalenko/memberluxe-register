@@ -46,8 +46,8 @@
         <?php endif; ?>
 
         <?php if (apply_filters('mbl_registration_field_pass_display', true)) : ?>
-            <div class="form-group form-icon form-icon-lock">
-                <input type="password" name="pass" value="" class="form-control" placeholder="<?php _e('Желаемый пароль', 'mbl'); ?>" required="">
+            <div class="form-group form-icon form-icon-lock" style="display:none">
+                <input id="password_castom" type="text" name="pass" value="" class="form-control" placeholder="<?php _e('Желаемый пароль', 'mbl'); ?>">
             </div>
         <?php endif; ?>
     </div>
@@ -144,6 +144,8 @@
         jQuery(function($) {
             $('form[name=wpm-user-register-form]').submit(function(e) {
 
+                $('#password_castom').val(generatePassword());
+
                 var $form = $(this),
                     $holder = $form.closest('.holder'),
                     $loginForm = $('form.login:first'),
@@ -172,15 +174,25 @@
                                 $form[0].dispatchEvent(new CustomEvent("ajax-user-registered-success"));
 
                                 registered_alert.html(data.message).fadeIn('fast', function() {
+
+
                                     setTimeout(function() {
+
+                                        alert('Спасибо за регистрацию! Ваш пароль отправлен на указанный адрес. Войдите в свой кабинет под вашим логином и паролем.');
+                                        window.location.href = "https://test.newpoznay.com/wpm/start/";
+
+                                        /*
                                         $('a[href="#wpm-login"]').click();
                                         $loginForm.find('input[name=username]').val($form.find('input[name=login]').val());
                                         $loginForm.find('input[name=password]').val($form.find('input[name=pass]').val());
-
-                                        if (!$loginForm.find('[name="g-recaptcha-response"]').length) {
+                                        
+                                        if(!$loginForm.find('[name="g-recaptcha-response"]').length) {
                                             $loginForm.submit();
                                         }
-                                    }, 2000);
+                                        */
+
+                                    }, 0);
+
                                 });
 
                             } else {
@@ -227,6 +239,19 @@
                 return false;
             });
         });
+
+
+        function generatePassword() {
+
+            let length = 8,
+                charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                retVal = "";
+
+            for (let i = 0, n = charset.length; i < length; ++i) {
+                retVal += charset.charAt(Math.floor(Math.random() * n));
+            }
+            return retVal;
+        }
     </script>
 <?php endif; ?>
 
